@@ -19,45 +19,55 @@ body {
 }
 
 .bund-logo {
+  height: 60px;
   box-sizing: initial;
   float: none;
   display: inline;
-   /*image-rendering: -moz-crisp-edges;  Firefox */
-   image-rendering:optimize-contrast;         /* CSS3 Proposed  */
-   image-rendering:pixelated;                 /* CSS4 Proposed  */
-   image-rendering: -o-crisp-edges; /* Opera */
-   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-   -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+  image-rendering: -moz-crisp-edges;
+  image-rendering:optimize-contrast;         /* CSS3 Proposed  */
+  image-rendering:pixelated;                 /* CSS4 Proposed  */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
 }
 
 /* Landscape */
 @media only screen 
   and (min-device-width: 375px) 
-  and (max-device-width: 812px) 
+  and (max-device-width: 823px) 
   and (-webkit-min-device-pixel-ratio: 3)
   and (orientation: landscape) {
 
-  .fixed-content {
-    max-height: 50px;
-  }
+    .fixed-content {
+      max-height: 50px;
+    }
 
-  .logo {
-    max-height: 50px;
-  }
+    .logo {
+      max-height: 50px;
+    }
 
-  .control-bar-header p {
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
+    .control-bar-header p {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
 
-  .bund-logo {
-    height: 50px;
-  }
+    .bund-logo {
+      height: 50px;
+    }
 
-  .fixed-content p {
-    display: none;
-  }
+    .fixed-content p {
+      display: none;
+    }
+
+    #control-bar ul li a {
+      padding: 0 !important;
+    }
+
+    #control-bar ul.components {
+    padding: 5px 0 !important;
+    }
 }
+
 
 span.icon {
   font-family: FontAwesome;
@@ -66,7 +76,6 @@ span.icon {
 .label-primary {
   background-color: #ffd000;
 }
-
 
 /* ---------------------------------------------------
     LEAFLET LAYER CONTROL STYLE
@@ -113,7 +122,7 @@ span.icon {
 
 .leaflet-sidebar {
     float: right;
-    z-index: 700;
+    z-index: 2000;
 }
 
 .leaflet-sidebar > .leaflet-control {

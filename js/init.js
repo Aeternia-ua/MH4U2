@@ -40,36 +40,6 @@ $( document ).init(function() {
         $('.info.legend.leaflet-control').hide();
     });
 
-    ///Handling click event for the Clear Filter button inside Bootstrap control sidebar START
-    //  $('.parent').on('click', function(e) {
-    //   // Do not trigger if target elm or it's child has `no-orange` class
-    //   if(!treeHasClass(e.target, "no-orange", this)) {
-    //     $(this).css('backgroundColor', 'darkorange');
-    //   }
-    // });
-
-    $('.no-collapse').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $('.dropdown-toggle').dropdown("toggle");
-    });
-    /**
-     * Checks if any of parent nodes of elm has a class name
-     * @param {HTMLElement} elm the starting node
-     * @param {string} className
-     * @param {HTMLElement} stopAtElm if this parent is reached, search stops
-    **/
-    // function treeHasClass(elm, className, stopAtElm) {
-    //   while(elm != null && elm != stopAtElm) {
-    //     if(elm.classList.contains(className)) {
-    //       return true;
-    //     }
-    //     elm = elm.parentNode;
-    //   }
-    //   return false;
-    // }
-    ///Handling click event for the Clear Filter button inside Bootstrap control sidebar END
-
     // This is the Carto Positron basemap
     let basemap = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
@@ -205,14 +175,13 @@ function init(map, sidebar) {
 
             createFacilitiesArray(mappingSheets);
             let codes = mergeCodes(collection, dataTypesTemplate);
-            getPatientTypes(collection);
-
             //Create marker cluster layer group.
             let markerCluster = L.markerClusterGroup({
                 showCoverageOnHover: true,
                 zoomToBoundsOnClick: true,
             }).addTo(map);
             map.markerCluster = markerCluster;
+
             let categoriesRoot = $("#filterCategoriesUL");
             buildServiceCategory(categoriesRoot, codes);
             buildFacilityTypeCategory(categoriesRoot);
@@ -235,6 +204,15 @@ function init(map, sidebar) {
 
 function initializeEvents(layers, sidebar, markers) {
     buttonsJson.forEach(element => bindClearFilter(element.buttonId, element.className, layers, sidebar, markers));
+
+    //Handle click event for the Clear Filter buttons in a category filters sidebar
+    //when the buttons are active
+    $('.no-collapse').on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      $('.dropdown-toggle').toggleClass("toggle");
+    });
+
 }
 
 function bindClearFilter(buttonId, className, layers, sidebar, markers) {
@@ -327,6 +305,7 @@ function createFacilitiesArray(array) {
                         'mh4uCooperation': row["Співпраця з MH4U"],
                         'patienttype': [],
                         'mentalhealthworkers': row["фахівці з психічного здоров'я"],
+                        'mentalHealthWorkersNum': [], 
                         'ac1': row["Activity code 1"],
                         'ac2': row["Activity code 2"],
                         'facilitytype': row["амбулаторна чи стаціонарна"]

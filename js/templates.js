@@ -24,12 +24,11 @@ const sidebarTemplate =
 	`<h5 class="card-header text-center">Офіційна назва</h5>
 	<p class="official-name-header"> {{officialName}} </p>
 	<h5 class="card-header text-center">Юридична адреса</h5> {{address}} 
-	<h5 class="card-header text-center">Контакти</h5> {{phonenumber}} {{email}} 
-	<h5 class="card-header text-center">Цільове населення</h5> {{patienttype}}
-	<h5 class="card-header text-center">Фахівці з психічного здоров'я</h5> {{mentalhealthworkers}}
+	<h5 class="card-header text-center">Контакти</h5> {{phonenumber}} {{email}}
+	{{filterValues}}
 	<h5 class="card-header text-center">Тип послуг</h4> {{activitycategory}}: {{activitycodename}}.
-    <ul>
-    <li>{{subactivitycodename}}. </li>
+    <ul class="list-group">
+    <li class="list-group">{{subactivitycodename}}. </li>
     </ul></br>
 	<p><small class="text-muted">Інформація актуальна станом на {{recorddate}}</small></p>`
 

@@ -9,7 +9,6 @@
   "author": "Iryna Herasymuk",
   "license": "MIT",
   "dependencies": {
-    "@popperjs/core": "^2.3.3",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "leaflet": "^1.6.0",
@@ -25,6 +24,7 @@
     "tabletop": "^1.6.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-arrow-functions": "^7.8.3"
+    "@babel/plugin-transform-arrow-functions": "^7.8.3",
+    "@popperjs/core": "^2.3.3"
   }
 }
