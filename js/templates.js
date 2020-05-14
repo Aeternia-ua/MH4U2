@@ -51,5 +51,3 @@ const filterCategoryTemplate =
 		</ul>
 	</li>
 `;
-
-

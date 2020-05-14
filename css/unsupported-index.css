@@ -1,0 +1,22 @@
+body {
+
+	/*background-position: left;*/
+	background-color: #dde4e9!important;
+	background-image: url('../img/MH4U_Sign-white.png');
+	background-position: calc(100% + 125px) 100%;
+	background-size: 300px;
+	background-repeat: no-repeat;
+
+}
+
+.error-template {
+	padding: 40px 15px;text-align: center;
+}
+
+.error-actions {
+	margin-top:15px;margin-bottom:15px;
+}
+
+.error-actions .btn {
+	margin-right:10px; 
+}
