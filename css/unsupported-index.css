@@ -1,22 +1,76 @@
 body {
 
 	/*background-position: left;*/
-	background-color: #dde4e9!important;
-	background-image: url('../img/MH4U_Sign-white.png');
-	background-position: calc(100% + 125px) 100%;
-	background-size: 300px;
+	/*background-color: #dde4e9!important;*/
+	/*background-color: #7500ff!important;*/
+	background-image: url('../img/mh4u-overlay.png');
+	/*background-position: 100% calc(125px - 100%);*/
+	background-size: auto 100%;
 	background-repeat: no-repeat;
 
 }
 
 .error-template {
-	padding: 40px 15px;text-align: center;
+    padding: 90px 15px;
+    margin: 50px;
+    text-align: center;
+    background: #ffffff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-image: url('../img/MH4U_BrandBlock.png');
+    background-position: 15px 15px;
+ 	background-size: 175px;
+	background-repeat: no-repeat;
 }
 
 .error-actions {
-	margin-top:15px;margin-bottom:15px;
+	margin-top: 25px;
+	margin-bottom: 35px;
 }
 
 .error-actions .btn {
-	margin-right:10px; 
+	margin-right: 5px;
+	margin-left: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#urlTextField {
+	max-width: 300px;
+}
+
+.centered {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.error-details {
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
+
+.logo {
+
+	height: 90px;
+    float: left;
+    background: #fff;
+    display: inline;
+   /*image-rendering: -moz-crisp-edges;  Firefox */
+   image-rendering: optimize-contrast;         /* CSS3 Proposed  */
+   image-rendering: pixelated;                 /* CSS4 Proposed  */
+   image-rendering: -o-crisp-edges; /* Opera */
+   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+   -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+}
+
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(119,0,255,0.8); /* Black background with opacity */
 }
