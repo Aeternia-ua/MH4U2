@@ -1,5 +1,5 @@
 var lastSlashIndex = document.location.pathname.lastIndexOf("/");
-var origin = localStorage["mh4u-origin"]?localStorage["mh4u-origin"]:"/index.html";
+var origin = (typeof localStorage !== "undefined" && localStorage["mh4u-origin"])?localStorage["mh4u-origin"]:"/index.html";
 var newPath = window.location.pathname.substring(0, lastSlashIndex) + origin;
 var indexURL = window.location.origin + newPath;
 

@@ -48,7 +48,9 @@ if (typeof Array.prototype.flat === "undefined") {
 
 	// window.navigate: ONLY for old versions of Internet Explorer
 	var origin = window.location.pathname.substring(window.location.pathname.lastIndexOf("/"));
-	window.localStorage.setItem("mh4u-origin", origin);
+	if (typeof window.localStorage !== "undefined") {
+		window.localStorage.setItem("mh4u-origin", origin);
+	}
 	window.navigate("unsupported-index.html");
 };
 
