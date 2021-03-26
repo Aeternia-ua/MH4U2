@@ -164,8 +164,7 @@ function getMarkersByRegion(filteredMarkers, region) {
     }
 }
 
-// init() is called as soon as the page loads
-function init(map, sidebar) {
+function init(map, sidebar) { // init() is called as soon as the page loads
     Tabletop.init({
 
         key: dataURL,
@@ -175,8 +174,7 @@ function init(map, sidebar) {
 
             createFacilitiesArray(mappingSheets);
             let codes = mergeCodes(collection, dataTypesTemplate);
-            //Create marker cluster layer group.
-            let markerCluster = L.markerClusterGroup({
+            let markerCluster = L.markerClusterGroup({ //Create marker cluster layer group.
                 showCoverageOnHover: true,
                 zoomToBoundsOnClick: true,
             }).addTo(map);
@@ -196,8 +194,13 @@ function init(map, sidebar) {
             addMarkerSearch(markerCluster);
             initBreadcrumbs(map.rootAdministrativeUnit);
 
-            //When all the map controls are initialized, hide map loader
-            loader.hide();
+            let mapsRoot = $("#maps-menu");
+            createMapsMenu(mapsRoot, gMaps);
+            //TEST router
+            window.addEventListener('hashchange', router);
+            window.addEventListener('load', router);
+
+            loader.hide(); // When all the map controls are initialized, hide map loader
         },
     });
 }
@@ -205,8 +208,7 @@ function init(map, sidebar) {
 function initializeEvents(layers, sidebar, markers) {
     buttonsJson.forEach(element => bindClearFilter(element.buttonId, element.className, layers, sidebar, markers));
 
-    //Handle click event for the Clear Filter buttons in a category filters sidebar
-    //when the buttons are active
+    // Handle click event for the Clear Filter buttons in a category filters sidebar when the buttons are active
     $('.no-collapse').on('click', function(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -242,10 +244,8 @@ function createMarkers(sidebar, features) {
     	let marker = createMarker(feature);
         markers.push(marker);
 
-        let icon;
-        // AwesomeMarkers is used to create facility icons. TODO: add icons
-        //If 'mh4uCooperation' value equals 'Yes', add a custom icon to the marker
-        if (feature.properties.mh4uCooperation == 'Yes') {
+        let icon; // AwesomeMarkers is used to create facility icons.
+        if (feature.properties.mh4uCooperation == 'Yes') { // If 'mh4uCooperation' value equals 'Yes', add a custom icon to the marker
                 icon = L.AwesomeMarkers.icon({
                 // icon: 'star',
                 icon: 'certificate',
@@ -262,9 +262,7 @@ function createMarkers(sidebar, features) {
         });
         }
         marker.setIcon(icon);
-
-        //Function to open right sidebar with facility description after clicking on marker
-        marker.on('click', (e)=> populateInfoSidebar(e, sidebar));
+        marker.on('click', (e)=> populateInfoSidebar(e, sidebar)); // Open right sidebar with facility description after clicking on marker
     }
 
     return markers;
@@ -273,8 +271,7 @@ function createMarkers(sidebar, features) {
 function createFacilitiesArray(array) {
     let regions = array.data.forEach(region => {
 
-        //Get region name from the sheet tab name
-        let regionTabName = region.name;
+        let regionTabName = region.name; // Get region name from the sheet tab name
         let regionName = regionTabName.replace(/.*?\[.*?\]/, '');
 
         let rows = region.elements;
@@ -283,8 +280,7 @@ function createFacilitiesArray(array) {
             let lat = parseFloat(row.Latitude);
             let lon = parseFloat(row.Longitude);
 
-            // If the showOnMap checkbox is set to true, and
-            // if feature has the lat and long property, add feature to the map
+            // If the showOnMap checkbox is set to true, and if feature has the lat and long property, add feature to the map
             let showOnMap = row["Додати на мапу"];
             if (lat && lon && showOnMap === "TRUE") {
                 let coords = [parseFloat(row.Longitude), parseFloat(row.Latitude)];
@@ -393,3 +389,24 @@ function getMarkerColor(type) {
     else
         return 'blue';
 }
+
+// function buildRoutes() {
+//
+//     const router = new Router({
+//       mode: 'hash',
+//       root: '/'
+//     });
+//
+//     router
+//       .add(/Karta-nadannya-psihosotsіalinoii-pіdtrimki/, () => {
+//           console.log('router ', router);
+//         alert('welcome in about page');
+//       })
+//       .add(/products\/(.*)\/specification\/(.*)/, (id, specification) => {
+//         alert(`products: ${id} specification: ${specification}`);
+//       })
+//       .add('', () => {
+//         // general controller
+//         console.log('welcome in catch all controller');
+//       });
+// }

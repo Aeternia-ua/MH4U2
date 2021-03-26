@@ -37,7 +37,7 @@ const mh4uCooperationBadge = `<span class="badge badge-warning badge-pill"><i cl
 const filterCategoryTemplate =
 	`<li>
 		<!-- This is the filter dropdown item template prototype START-->
-		<a href="#{categoryCanonicalName}Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+		<a href="#{categoryCanonicalName}Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle filter-category-dropdown">
 			<button type="button" id="clear{categoryCanonicalName}FiltersBtn" class="btn btn-info btn-sm clear-filter no-collapse" title="Очистити фільтр" disabled><div class="btn-clear-filter"></div></button>
 			{categoryName}</a>
 
@@ -50,4 +50,30 @@ const filterCategoryTemplate =
 			</div>
 		</ul>
 	</li>
+`;
+
+const mapListItemTemplate = `<a class="dropdown-item" href="{mapUrl}">{mapTitle}</a>`;
+
+const embeddedMapTemplate = `
+<div class="wrapper">
+         <div id="content">
+            <div class="content-wrapper">
+               <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                  <div class="container-fluid">
+                     <div class="dropdown dropdown-menu-sm-right">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           Карти закладів з надання психіатричної допомоги
+                        </button>
+                        <div class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
+                           <a class="dropdown-item" href="index.html">MH4U - Карта закладів системи охорони психічного здоров’я</a>
+                           <a class="dropdown-item" href="#">Another action</a>
+                           <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                     </div>
+                  </div>
+               </nav>
+               <div id="embedded-map-canvas"></div>
+            </div>
+         </div>
+         </div>
 `;

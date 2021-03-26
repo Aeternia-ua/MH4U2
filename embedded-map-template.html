@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <script src="js/browser-detection.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+      <!-- Scrollbar Custom CSS -->
+      <link rel="stylesheet" href="css/styles.css" />
+      <!-- after Leaflet script -->
+      <script src="node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+      <script src="node_modules/jquery/dist/jquery.min.js"></script>
+      <script src="node_modules/@popperjs/core/dist/umd/popper.js"></script>
+      <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="js/init-globals.js"></script>
+      <script src="js/utils.js"></script>
+      <script src="js/templates.js"></script>
+</head>
+<body>
+      <div class="wrapper">
+         <div id="content">
+            <div class="content-wrapper">
+               <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                  <div class="container-fluid">
+                     <div class="dropdown dropdown-menu-sm-right">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           Карти закладів з надання психіатричної допомоги
+                        </button>
+                        <div class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
+                           <a class="dropdown-item" href="index.html">MH4U - Карта закладів системи охорони психічного здоров’я</a>
+                           <a class="dropdown-item" href="#">Another action</a>
+                           <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                     </div>
+                  </div>
+               </nav>
+               <div id="embedded-map-canvas"></div>
+            </div>
+         </div>
+      </div>
+   </body>
+
+   <script src="js/maps.js"></script>
+<script src="js/googleMapsLoader.js"></script>
+<script src="js/mapsMenu.js"></script>
+</html>
