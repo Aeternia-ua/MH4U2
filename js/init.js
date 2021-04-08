@@ -195,7 +195,7 @@ function init(map, sidebar) { // init() is called as soon as the page loads
             initBreadcrumbs(map.rootAdministrativeUnit);
 
             let mapsRoot = $("#maps-menu");
-            createMapsMenu(mapsRoot, gMaps);
+            createMapsMenu(mapsRoot, mapsData);
             //TEST router
             window.addEventListener('hashchange', router);
             window.addEventListener('load', router);

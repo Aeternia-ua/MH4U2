@@ -54,26 +54,34 @@ const filterCategoryTemplate =
 
 const mapListItemTemplate = `<a class="dropdown-item" href="{mapUrl}">{mapTitle}</a>`;
 
-const embeddedMapTemplate = `
-<div class="wrapper">
-         <div id="content">
-            <div class="content-wrapper">
-               <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                  <div class="container-fluid">
-                     <div class="dropdown dropdown-menu-sm-right">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Карти закладів з надання психіатричної допомоги
-                        </button>
-                        <div class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
-                           <a class="dropdown-item" href="index.html">MH4U - Карта закладів системи охорони психічного здоров’я</a>
-                           <a class="dropdown-item" href="#">Another action</a>
-                           <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                     </div>
-                  </div>
-               </nav>
-               <div id="embedded-map-canvas"></div>
-            </div>
-         </div>
-         </div>
-`;
+// Components
+const HomeComponent = {
+  render: () => {
+    return `
+      <section>
+        <h1>Home</h1>
+        <p>This is a home page template</p>
+      </section>
+    `;
+  }
+}
+
+class PageComponent {
+  constructor(iframeSrc) {
+    this.iframeSrc = iframeSrc;
+  }
+  render = () => {
+    return `<div id="embedded-map-canvas"><iframe src="${this.iframeSrc}" width="100%" height="100%"></iframe></div>`;
+  }
+}
+
+const ErrorComponent = {
+  render: () => {
+    return `
+      <section>
+        <h1>Error</h1>
+        <p>Page not found</p>
+      </section>
+    `;
+  }
+}
