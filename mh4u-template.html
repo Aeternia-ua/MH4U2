@@ -41,60 +41,58 @@
       <script src="js/administrativeunits.js"></script>
       <script src="js/transliterator.js"></script>
       <script src="node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-
    </head>
    <body>
-         <div class="wrapper">
-            <nav id="control-bar">
-               <div class="control-bar-header">
-                  <a href="./index.html">
-                  <img class="logo" src="img/MH4U_BrandBlock.png"></a>
-                  <p>Заклади системи охорони психічного здоров’я України</p>
-               </div>
-               <ul class="list-unstyled components" id="filterCategoriesUL">
-                  <!-- Other categories will be added here -->
-               </ul>
-               <div class="controlbar-decoration"></div>
-               <div class="fixed-content">
-                  <p style="margin-bottom: 5px"><small class="text-muted">За підтримки</small></p>
-                  <img class="bund-logo" src="img/Bund-ukrain_CMYK_pos.png">
-               </div>
-            </nav>
-
-            <div id="content">
-               <div class="content-wrapper">
-                  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                     <div class="container-fluid">
-<section id="app"></section>
-                        <button type="button" id="control-barCollapse" class="btn btn-info">
-                        <span class="icon">&#xf0b0;</span>
-                        <span class="button-label-minimize">Фільтри пошуку</span>
+      <div class="wrapper">
+         <nav id="control-bar">
+            <div class="control-bar-header">
+               <a href="./index.html">
+               <img class="logo" src="img/MH4U_BrandBlock.png"></a>
+               <p>Заклади системи охорони психічного здоров’я України</p>
+            </div>
+            <ul class="list-unstyled components" id="filterCategoriesUL">
+               <!-- Other categories will be added here -->
+            </ul>
+            <div class="controlbar-decoration"></div>
+            <div class="fixed-content">
+               <p style="margin-bottom: 5px"><small class="text-muted">За підтримки</small></p>
+               <img class="bund-logo" src="img/Bund-ukrain_CMYK_pos.png">
+            </div>
+         </nav>
+         <div id="content">
+            <div class="content-wrapper">
+               <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                  <div class="container-fluid">
+                     <section id="app"></section>
+                     <button type="button" id="control-barCollapse" class="btn btn-info">
+                     <span class="icon">&#xf0b0;</span>
+                     <span class="button-label-minimize">Фільтри пошуку</span>
+                     </button>
+                     <!-- Region filter breadcrumb -->
+                     <div class="breadcrumbs btn btn-warning mr-auto" style="z-index: 10000" id="breadCrumbRootLevel">
+                     </div>
+                     <!-- Region filter breadcrumb END -->
+                     <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Карти закладів з надання психіатричної допомоги
                         </button>
-                        <!-- Region filter breadcrumb -->
-                        <div class="breadcrumbs btn btn-warning mr-auto" style="z-index: 10000" id="breadCrumbRootLevel">
-                        </div>
-                        <!-- Region filter breadcrumb END -->
-                        <div class="dropdown">
-                           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Карти закладів з надання психіатричної допомоги
-                           </button>
-                           <div id="maps-menu" class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
-                           </div>
+                        <div id="maps-menu" class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
                         </div>
                      </div>
-                  </nav>
-                  <div id="map"></div>
-                  <div id="sidebar" class="card leaflet-sidebar collapsed">
-                     <div class="leaflet-sidebar-pane">
-                        <h1 id="sidebar-title"></h1>
-                        <div class="card-body" id="sidebar-content">
-                           <p></p>
-                        </div>
+                  </div>
+               </nav>
+               <div id="map"></div>
+               <div id="sidebar" class="card leaflet-sidebar collapsed">
+                  <div class="leaflet-sidebar-pane">
+                     <h1 id="sidebar-title"></h1>
+                     <div class="card-body" id="sidebar-content">
+                        <p></p>
                      </div>
                   </div>
                </div>
             </div>
          </div>
+      </div>
    </body>
    <script src="js/breadcrumbs.js"></script>
    <script src="js/info-sidebar.js"></script>

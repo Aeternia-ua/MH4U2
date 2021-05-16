@@ -64,14 +64,13 @@
             <div id="content">
                <div class="content-wrapper">
                   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                     <div class="container-fluid">
+                     <div class="container-fluid" id="navbar-content">
                         <button type="button" id="control-barCollapse" class="btn btn-info">
                         <span class="icon">&#xf0b0;</span>
                         <span class="button-label-minimize">Фільтри пошуку</span>
                         </button>
                         <!-- Region filter breadcrumb -->
-                        <div class="breadcrumbs btn btn-warning mr-auto" style="z-index: 10000" id="breadCrumbRootLevel">
-                        </div>
+                        <div class="breadcrumbs btn btn-warning mr-auto" style="z-index: 10000" id="breadCrumbRootLevel"></div>
                         <!-- Region filter breadcrumb END -->
                         <div class="dropdown">
                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -109,10 +108,11 @@
    <script src="js/init.js"></script>
    <script>
        getExternalMaps(mapsData);
-       console.log(" allExternalMaps ", externalMaps.allExternalMaps);
+       // console.log(" allExternalMaps ", externalMaps.allExternalMaps);
        let mapsRoot = $("#maps-menu");
        createMapsMenu(mapsRoot, mapsData);
        console.log("the list of routes ", routesArr);
+       // clearHomePageComponents();
        //Router
        window.addEventListener('hashchange', router);
        window.addEventListener('load', router);

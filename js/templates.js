@@ -57,12 +57,7 @@ const mapListItemTemplate = `<a class="dropdown-item" href="{mapUrl}">{mapTitle}
 // Components
 const HomeComponent = {
   render: () => {
-    return `
-      <section>
-        <h1>Home</h1>
-        <p>This is a home page template</p>
-      </section>
-    `;
+    return ``;
   }
 }
 
@@ -85,3 +80,4 @@ const ErrorComponent = {
     `;
   }
 }
+

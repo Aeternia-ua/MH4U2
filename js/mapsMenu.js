@@ -35,6 +35,7 @@ function createMapsMenu(mapsListRoot, entries) {
         let mapUrl = transliterate((mapTitle.toLowerCase()).replace(/ /g, "-")
             .replace(/,/g, ""))
             .replace(/:/g, "")
+            .replace(/\(/g,"").replace(/\)/g,"")
             .replace(/'/g, "") //TODO replace special symbols in map title to create url
 
         let mapRoute = new Route();

@@ -220,6 +220,10 @@ a:focus {
     padding: auto;
 }
 
+#navbar-content {
+    justify-content: flex-end;
+}
+
 /* ---------------------------------------------------
     LEFT (FILTERING) BAR STYLE
     Color scheme:

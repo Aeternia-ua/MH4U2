@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+   <head>
+      <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <script src="js/browser-detection.js"></script>
@@ -16,41 +16,40 @@
       <script src="js/init-globals.js"></script>
       <script src="js/utils.js"></script>
       <script src="js/templates.js"></script>
-</head>
-<body>
+   </head>
+   <body>
       <div class="wrapper">
          <div id="content">
             <div class="content-wrapper">
                <nav class="navbar navbar-expand-lg navbar-light bg-light">
                   <div class="container-fluid">
-                        <div class="dropdown">
-                           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Карти закладів з надання психіатричної допомоги
-                           </button>
-                           <div id="maps-menu" class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
-                           </div>
+                     <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Карти закладів з надання психіатричної допомоги
+                        </button>
+                        <div id="maps-menu" class="dropdown-menu maps-menu" aria-labelledby="dropdownMenuButton">
                         </div>
+                     </div>
                   </div>
                </nav>
-                <section id="app"></section>
+               <section id="app"></section>
             </div>
          </div>
       </div>
    </body>
-
-    <script src="js/maps.js"></script>
-    <script src="js/transliterator.js"></script>
-    <script src="js/mapsMenu.js"></script>
-    <script src="js/router.js"></script>
-    <script src="js/googleMapsLoader.js"></script>
+   <script src="js/maps.js"></script>
+   <script src="js/transliterator.js"></script>
+   <script src="js/mapsMenu.js"></script>
+   <script src="js/router.js"></script>
+   <script src="js/googleMapsLoader.js"></script>
    <script>
-       getExternalMaps(mapsData);
-       console.log(" allExternalMaps ", externalMaps.allExternalMaps);
-       let mapsRoot = $("#maps-menu");
-       createMapsMenu(mapsRoot, mapsData);
-       console.log("the list of routes ", routesArr);
-       //Router
-       window.addEventListener('hashchange', router);
-       window.addEventListener('load', router);
+      getExternalMaps(mapsData);
+      console.log(" allExternalMaps ", externalMaps.allExternalMaps);
+      let mapsRoot = $("#maps-menu");
+      createMapsMenu(mapsRoot, mapsData);
+      console.log("the list of routes ", routesArr);
+      //Router
+      window.addEventListener('hashchange', router);
+      window.addEventListener('load', router);
    </script>
 </html>
