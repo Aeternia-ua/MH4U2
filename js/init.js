@@ -32,7 +32,6 @@ $( document ).init(function() {
     $("#sidebar").mCustomScrollbar({
         theme: "dark-2"
     });
-    
 
     ///Hide breadcrumb dropdown on map click
     map.on('click', function(e) {
@@ -46,7 +45,6 @@ $( document ).init(function() {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     });
     basemap.addTo(map);
-
     //Map loader
     loader = L.control.loader();
     loader.addTo(map);
@@ -86,9 +84,7 @@ $( document ).init(function() {
 
 function getFilteredMarkers(markers) {
     let checkboxStates = updateCheckboxStates();
-
     let checkboxIsChecked = false;
-
     filtersSectionBinding.forEach(binding => {
         checkboxIsChecked = checkboxIsChecked | checkboxStates[binding.arrayName].length > 0;
     });
@@ -165,7 +161,9 @@ function getMarkersByRegion(filteredMarkers, region) {
 }
 
 function init(map, sidebar) { // init() is called as soon as the page loads
-    Tabletop.init({
+    getJson().then(r => {console.log("getJson response ", r)});
+    // fetchMarkers().then(r => {console.log("fetchMarkers result", r)});
+    Tabletop.init({ // TODO: Replace with GS API 4 service
 
         key: dataURL,
         callback: (data, tabletop, mappingData) => {        

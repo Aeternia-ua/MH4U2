@@ -37,8 +37,7 @@ function createDataTypes(dataTypesTemplate, sheets) {
 }
 
 ///TODO: tab naming template
-var dataTypesTemplate  = [
-
+let dataTypesTemplate  = [
     {
         ///Region tab that should be added to map
         type: "[Так]",
@@ -65,12 +64,10 @@ var dataTypesTemplate  = [
         data: []
     },
     {
-        ///Tab with data other than facility locations that should NOT be parsed
-        ///(i.e. instructions, spreadsheet validation ranges)
+        ///Tab with data other than facility locations that should NOT be parsed (i.e. instructions, spreadsheet validation ranges)
         type: "[info]",
         name: "database info sheets",
         parse: false,
         data: []
     }
-
 ];
