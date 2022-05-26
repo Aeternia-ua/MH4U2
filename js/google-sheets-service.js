@@ -20,15 +20,14 @@
         // })
     }
 
-    async function getJson() { /// Returns a list of sheet titles
+    async function getSheets() { /// Returns a list of sheet titles
         try {
             worksheetUrl = this.getWorksheetUrl(worksheetId, apiKey);
             http.open('GET', worksheetUrl);
             http.send();
             http.onload = async function () {
-                if (http.status !== 200) {
-                    console.log(`Error ${http.status}: ${http.statusText}`);
-                } else {
+                if (http.status !== 200) { console.log(`Error ${http.status}: ${http.statusText}`); }
+                else {
                     let response = http.response;
                     let jsonSheets = JSON.parse(response).sheets;
                     // TODO: Move to separate function
@@ -36,57 +35,9 @@
                         title: sheetRef.properties.title,
                         url: getSheetUrl(worksheetId, sheetRef.properties.title, apiKey),
                     })));
-
-                    let sheetRequestArray = [];
-                    sheetRefArray.forEach(sheetRef => {
-                        sheetRef.forEach(e => {
-                            fetch(getSheetData(e.url))
-                              .then(sheetData => {
-                                  console.log("sheetData: ", sheetData); // Returns a response
-                                  // const response = sheetData.body.getReader();
-                                  sheetRequestArray.push(sheetData);
-                              })
-                            // sheetRequestArray.push(getSheetData(e.url));
-                        })
+                    Promise.all(fetchSheetRequests(sheetRefArray)).then(r => {
+                        console.log("r ", r);
                     })
-
-
-                    console.log("sheets: ", sheets);
-                    Promise.all(sheetRequestArray).then(function(result) {
-                     // cars will be an array of results in order
-                        console.log("result: ", result);
-                    });
-
-                    // let sheetRequestArray = [];
-                    // sheetRefArray.forEach(sheetRef => {
-                    //     sheetRef.forEach(e => {
-                    //         sheetRequestArray.push(function () {
-                    //             return getSheetData(e.url)
-                    //         });
-                    //         console.log("sheetRequestArray ", sheetRequestArray);
-                    //     })
-                    //
-                    // })
-                    // console.log("sheetRequestArray ", sheetRequestArray);
-                    // Promise.all(sheetRequestArray).then((result) => {
-                    //     console.log("result ", result);
-                    // })
-
-                    // Promise.all(getSheetData(sheet.url)).then((values) => {
-                    // });
-
-                    // sheetRefArray.map(sheetRef => sheetRef.map(
-                    //     async sheet => {
-                    //         let sheetData = await getSheetData(sheet.url);
-                    //         console.log("sheetData ", sheetData);
-                    //         // sheetData.map(response => {
-                    //         //         console.log("response ", response);
-                    //         //         sheet.data = response;
-                    //         //         console.log("sheet ", sheet);
-                    //         //         sheets.push(sheet);
-                    //         //     })
-                    //     }
-                    //     ))
                 }
             }
         } catch (err) { document.getElementById('content').innerText = err.message; }
@@ -94,17 +45,27 @@
         return sheets;
     }
 
+    function fetchSheetRequests(sheetRefArray) {
+        let sheetRequestArray = [];
+        sheetRefArray.forEach(sheetRef => {
+            sheetRef.forEach(e => {
+                // Promise.all(getSheetData(e.url)).then(sheetData => { // Returns a promise
+                fetch(getSheetData(e.url)).then(sheetData => { sheetRequestArray.push(sheetData); })
+            })
+        })
+        console.log("sheetRequestArray: ", sheetRequestArray);
+         return sheetRequestArray;
+    }
+
     function getSheetData(url) {
         let sheetData = null;
         try {
             http.open('GET', url);
             http.send();
-            http.onload = function () {
-                if (http.status !== 200) {
-                    console.log(`Error ${http.status}: ${http.statusText}`);
-                } else {
+            http.onload = async function () {
+                if (http.status !== 200) { console.log(`Error ${http.status}: ${http.statusText}`); }
+                else {
                     sheetData = JSON.parse(http.response); ///Return an array of objects
-                    console.log('getSheetData sheetData ', [sheetData]);
                     sheets.push([sheetData]);
                     return [sheetData];
                 }

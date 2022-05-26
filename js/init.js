@@ -161,7 +161,7 @@ function getMarkersByRegion(filteredMarkers, region) {
 }
 
 function init(map, sidebar) { // init() is called as soon as the page loads
-    getJson().then(r => {console.log("getJson response ", r)});
+    getSheets().then(r => {console.log("getSheets response ", r)});
     // fetchMarkers().then(r => {console.log("fetchMarkers result", r)});
     Tabletop.init({ // TODO: Replace with GS API 4 service
 
