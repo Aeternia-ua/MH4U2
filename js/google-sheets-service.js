@@ -30,11 +30,11 @@
                 else {
                     let response = http.response;
                     let jsonSheets = JSON.parse(response).sheets;
-                    // TODO: Move to separate function
                     let sheetRefArray = [jsonSheets].map(data => data.map(sheetRef => ({
                         title: sheetRef.properties.title,
                         url: getSheetUrl(worksheetId, sheetRef.properties.title, apiKey),
                     })));
+                    // TODO: MAke this shit work. Relevant code is below
                     Promise.all(fetchSheetRequests(sheetRefArray)).then(r => {
                         console.log("r ", r);
                     })
@@ -49,13 +49,51 @@
         let sheetRequestArray = [];
         sheetRefArray.forEach(sheetRef => {
             sheetRef.forEach(e => {
-                // Promise.all(getSheetData(e.url)).then(sheetData => { // Returns a promise
-                fetch(getSheetData(e.url)).then(sheetData => { sheetRequestArray.push(sheetData); })
+                // TODO: MAke this shit work first. getSheetData Returns only one result
+                // Promise.all(getSheetData(e.url)).then(sheetData => {
+                //     console.log("sheetData ", sheetData);
+                //     sheetRequestArray.push(sheetData);
+                // })
+
+                fetch(getSheetData(e.url)).then(sheetData => {
+                    sheetRequestArray.push(sheetData);
+                })
             })
+            Promise.all(sheetRequestArray).then(data => {
+                console.log("data ", data);
+            });
         })
-        console.log("sheetRequestArray: ", sheetRequestArray);
-         return sheetRequestArray;
+        // console.log("sheetRequestArray ", sheetRequestArray);
+        return sheetRequestArray;
     }
+
+
+    // function getSheetData(url) {
+    //     let sheetData = null;
+    //     try {
+    //         http.open('GET', url);
+    //         http.send();
+    //         http.onload = async function () {
+    //             if (http.status !== 200) { console.log(`Error ${http.status}: ${http.statusText}`); }
+    //             else {
+    //                 sheetData = JSON.parse(http.response); ///Return an array of objects
+    //                 console.log("sheetData", sheetData);
+    //                 sheets.push([sheetData]);
+    //                 return [sheetData];
+    //             }
+    //         }
+    //     } catch (err) { document.getElementById('content').innerText = err.message; }
+    //     // return [sheetData];
+    //       return new Promise((resolve, reject) => {
+    //           setTimeout(() => {
+    //               resolve({
+    //                   sheetData
+    //               });
+    //               }, 20000);
+    //       });
+    //
+    // }
+
 
     function getSheetData(url) {
         let sheetData = null;
@@ -66,15 +104,40 @@
                 if (http.status !== 200) { console.log(`Error ${http.status}: ${http.statusText}`); }
                 else {
                     sheetData = JSON.parse(http.response); ///Return an array of objects
+                    console.log("sheetData", sheetData);
                     sheets.push([sheetData]);
+                    const sheetData2 = getSheetData('https://sheets.googleapis.com/v4/spreadsheets/1XnA5UQX0-vj8_0K3JeKYn6dhFvHvCxPeV6ZdIKY9pG8/values/%D0%90%D0%BA%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%96%20%D0%BA%D0%BE%D0%B4%D0%B8?alt=json&key=AIzaSyBKFgQMpdmaYa6s3ojD_-nyHRekJrrrvKA');
+                    sheets.push([sheetData2]);
+                    const sheetData3 = getSheetData('https://sheets.googleapis.com/v4/spreadsheets/1XnA5UQX0-vj8_0K3JeKYn6dhFvHvCxPeV6ZdIKY9pG8/values/[%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD]%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C?alt=json&key=AIzaSyBKFgQMpdmaYa6s3ojD_-nyHRekJrrrvKA');
+                    sheets.push([sheetData3]);
                     return [sheetData];
                 }
             }
         } catch (err) { document.getElementById('content').innerText = err.message; }
-        // console.log('getSheetData sheetData ', [sheetData]);
         return [sheetData];
-        // return sheets;
     }
+
+
+    // function getSheetData(url) {
+    //     let sheetData = null;
+    //     try {
+    //         http.open('GET', url);
+    //         http.send();
+    //         http.onload = async function () {
+    //             if (http.status !== 200) { console.log(`Error ${http.status}: ${http.statusText}`); }
+    //             else {
+    //                 sheetData = JSON.parse(http.response); ///Return an array of objects
+    //                 console.log("sheetData", sheetData);
+    //                 sheets.push([sheetData]);
+    //                 return [sheetData];
+    //             }
+    //         }
+    //     } catch (err) { document.getElementById('content').innerText = err.message; }
+    //     return [sheetData];
+    // }
+
+
+    // ANGULAR
 
     // async function getSheetData(url) {
     //     return sheetData = http.get<Response>(url)
