@@ -1,21 +1,55 @@
-function mergeCodes(arr, codeArr) {
-    let codeSet = codeArr.map(codeType => codeType.data).flat().find(sheet => sheet.name === codesTab);
+const prevCodeSetStructure = [
+    {
+        "Activity code": "15",
+        "Activity category": "Служби/послуги в закладах тривалого перебування",
+        "Activity code name": "Будинки-інтернати (будинки догляду)",
+        "Subactivity code": "15,2",
+        "Subactivity code name": "Будинки-інтернати для людей похилого віку"
+    },
+    {
+        "Activity code": "1",
+        "Activity category": "Загальні",
+        "Activity code name": "Загальні активності з охорони психічного здоров’я та психосоціальної підтримки",
+        "Subactivity code": "1,1",
+        "Subactivity code name": "Загальні активності з охорони психічного здоров’я та психосоціальної підтримки"
+    },
+]
 
+function buildCodeObjects(rowData) {
+    const [header, ...rows] = rowData;
+    const codeObjects = [];
+    for (let values = 0; values < rows.length; values ++) {
+        let row = rows[values];
+        let codeObject = {};
+        for (let key = 0; key < header.length; key++) {
+            codeObject[header[key]] = row[key]
+        }
+        codeObjects.push(codeObject);
+    }
+    return codeObjects;
+}
+
+function mergeCodes(arr, codeArr) {
+    let codeSet = codeArr.map(codeType => codeType.data).flat().find(sheet => sheet.Title === codesTab);
     let codes = [];
+
+    const codeObjects = buildCodeObjects(codeSet.values);
     if (codeSet) {
-        codeSet.elements.forEach(code => {
+        codeObjects.forEach(code => {
             let codeElement = {};
             codesProperties.forEach(codeProperty => {
                 codeElement[codeProperty.name] = code[codeProperty.columnName];
-                // codeElement.category = code[codeProperty.category];
             });
             codes.push(codeElement);
-
+            // TODO: Check
+            arr.features.forEach(feature => {
+                feature.properties.ac1 === code['Activity code']
+            });
             arr.features
-            .filter(element => element.properties.ac1 === code["Activity code"])
-            .forEach(element => {
+            .filter(feature => feature.properties.ac1 === code['Activity code'])
+            .forEach(feature => {
                 codesProperties.forEach(codeProperty => {
-                    element.properties[codeProperty.name] = code[codeProperty.columnName];
+                    feature.properties[codeProperty.name] = code[codeProperty.columnName];
                 });
             });
         });

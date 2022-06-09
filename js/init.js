@@ -2,25 +2,11 @@ let collection = {
     'type': 'FeatureCollection',
     'features': []
 };
-
 let otherCategories = new Set();
-
 let map = L.map('map').setView([49.8397, 24.0297], 8);
-var loader;
-
-let wantedSheets = [
-    {
-        type: "sheetsForMapping",
-        data: []
-    },
-    {
-        type: "configSheets",
-        data: []
-    }
-];
+let loader;
 
 $( document ).init(function() {
-
     $("#control-bar").mCustomScrollbar({
         theme: "minimal"
     });
@@ -32,29 +18,24 @@ $( document ).init(function() {
     $("#sidebar").mCustomScrollbar({
         theme: "dark-2"
     });
-
     ///Hide breadcrumb dropdown on map click
     map.on('click', function(e) {
         $('.breadcrumbs-dropdown-content').addClass('collapse');
         $('.info.legend.leaflet-control').hide();
     });
-
     // This is the Carto Positron basemap
     let basemap = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     });
     basemap.addTo(map);
-    //Map loader
-    loader = L.control.loader();
+    loader = L.control.loader(); //Map loader
     loader.addTo(map);
 
     let layerControl = new L.Control.Custom(null, null, {collapsed: true});
     map.layerControl = layerControl;
     layerControl.addTo(map);
-
-    ///map legend START  
-    let legend = new L.Control.Legend();
+    let legend = new L.Control.Legend(); /// Map legend
     legend.addTo(map);
 
     map.on('overlayadd', e => $(`.legend > span:contains(${e.name})`).toggle() );
@@ -75,7 +56,7 @@ $( document ).init(function() {
         map.sidebar.hide();
     });
 
-    init(map, sidebar);
+    getSheets();
 
     $('.breadcrumbs-dropdown').on('click', function () {
         $('.breadcrumbs-dropdown-content').removeClass('collapse');
@@ -90,7 +71,6 @@ function getFilteredMarkers(markers) {
     });
 
     let filteredMarkers;
-
     //If at least one filtering checkbox is checked, filter by the selected feature property is applied
     if(checkboxIsChecked) {
         filteredMarkers = markers.filter(marker => {
@@ -160,49 +140,6 @@ function getMarkersByRegion(filteredMarkers, region) {
     }
 }
 
-function init(map, sidebar) { // init() is called as soon as the page loads
-    getSheets().then(r => {console.log("sheets array response ", sheets)});
-    // fetchMarkers().then(r => {console.log("fetchMarkers result", r)});
-    Tabletop.init({ // TODO: Replace with GS API 4 service
-
-        key: dataURL,
-        callback: (data, tabletop, mappingData) => {        
-            initData(tabletop);
-            let mappingSheets = getFacilitiesData();
-
-            createFacilitiesArray(mappingSheets);
-            let codes = mergeCodes(collection, dataTypesTemplate);
-            let markerCluster = L.markerClusterGroup({ //Create marker cluster layer group.
-                showCoverageOnHover: true,
-                zoomToBoundsOnClick: true,
-            }).addTo(map);
-            map.markerCluster = markerCluster;
-
-            let categoriesRoot = $("#filterCategoriesUL");
-            buildServiceCategory(categoriesRoot, codes);
-            buildFacilityTypeCategory(categoriesRoot);
-            buildOtherCategories(categoriesRoot);
-
-            let overlays = createOverlays(codes);
-            let markers = createMarkers (map.sidebar, collection.features);
-            map.markers = markers;
-            createLayers(markerCluster, collection, markers, overlays, dataTypesTemplate);
-            createFilters(markers);
-            initializeEvents(markerCluster, map.sidebar, markers);
-            addMarkerSearch(markerCluster);
-            initBreadcrumbs(map.rootAdministrativeUnit);
-
-            let mapsRoot = $("#maps-menu");
-            createMapsMenu(mapsRoot, mapsData);
-            //TEST router
-            window.addEventListener('hashchange', router);
-            window.addEventListener('load', router);
-
-            loader.hide(); // When all the map controls are initialized, hide map loader
-        },
-    });
-}
-
 function initializeEvents(layers, sidebar, markers) {
     buttonsJson.forEach(element => bindClearFilter(element.buttonId, element.className, layers, sidebar, markers));
 
@@ -216,7 +153,7 @@ function initializeEvents(layers, sidebar, markers) {
 }
 
 function bindClearFilter(buttonId, className, layers, sidebar, markers) {
-    var btn = document.getElementById(buttonId);
+    let btn = document.getElementById(buttonId);
     if (btn) {
         btn.onclick = function (e) {
             clearCheckboxFilters(className, layers, sidebar, markers);
@@ -243,7 +180,7 @@ function createMarkers(sidebar, features) {
         markers.push(marker);
 
         let icon; // AwesomeMarkers is used to create facility icons.
-        if (feature.properties.mh4uCooperation == 'Yes') { // If 'mh4uCooperation' value equals 'Yes', add a custom icon to the marker
+        if (feature.properties.mh4uCooperation === 'Yes') { // If 'mh4uCooperation' value equals 'Yes', add a custom icon to the marker
                 icon = L.AwesomeMarkers.icon({
                 // icon: 'star',
                 icon: 'certificate',
@@ -260,100 +197,13 @@ function createMarkers(sidebar, features) {
         });
         }
         marker.setIcon(icon);
-        marker.on('click', (e)=> populateInfoSidebar(e, sidebar)); // Open right sidebar with facility description after clicking on marker
+        // marker.on('click', (e)=> populateInfoSidebar(e, sidebar)); // Open right sidebar with facility description after clicking on marker
+        marker.on('click', (e)=> {
+            populateInfoSidebar(e, sidebar);
+            console.log(marker);
+        });
     }
-
     return markers;
-}
-
-function createFacilitiesArray(array) {
-    let regions = array.data.forEach(region => {
-
-        let regionTabName = region.name; // Get region name from the sheet tab name
-        let regionName = regionTabName.replace(/.*?\[.*?\]/, '');
-
-        let rows = region.elements;
-        rows.forEach(row => {
-
-            let lat = parseFloat(row.Latitude);
-            let lon = parseFloat(row.Longitude);
-
-            // If the showOnMap checkbox is set to true, and if feature has the lat and long property, add feature to the map
-            let showOnMap = row["Додати на мапу"];
-            if (lat && lon && showOnMap === "TRUE") {
-                let coords = [parseFloat(row.Longitude), parseFloat(row.Latitude)];
-                let feature = {
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': coords
-                    },
-                    'properties': {
-                        'officialName': row["Офіційна назва"],
-                        'recorddate': row["Інформація актуальна станом на:"],
-                        'address': row["Адреса"],
-                        'district': row["Район"],
-                        'region': regionName,
-                        'phonenumber': row["контактний номер"],
-                        'email': row["електронна пошта веб сайт"],
-                        'mh4uCooperation': row["Співпраця з MH4U"],
-                        'patienttype': [],
-                        'mentalhealthworkers': row["фахівці з психічного здоров'я"],
-                        'mentalHealthWorkersNum': [], 
-                        'ac1': row["Activity code 1"],
-                        'ac2': row["Activity code 2"],
-                        'facilitytype': row["амбулаторна чи стаціонарна"]
-                    }
-                }
-
-                let customFilterCategories = {};
-
-                Object.keys(row)
-                    .filter(el => el.includes("F_")).forEach(filterColumn => {
-                    let filterName = filterColumn.replace("F_", "");
-                    let arr = filterName.split("_");
-
-                    let categoryName = arr[0].trim();
-                    let filterValueName = arr[1].trim();
-
-                    if (!customFilterCategories.hasOwnProperty(categoryName)) {
-                        customFilterCategories[categoryName] = [];
-                    }
-
-                    let filterObject = {
-                        "filterProperty": filterColumn,
-                        "filterDisplayName": filterValueName,
-                        "filterValueName": filterValueName
-                    };
-
-                    customFilterCategories[categoryName].push(filterObject);
-
-                    let filterProperty = {
-                        "filterValue": row[filterColumn],
-                        "filterAttributes": []
-                    };
-
-                    feature["properties"][`${filterColumn}`] = filterProperty;
-                    Object.keys(row)
-                        .filter(el => el.includes(`A_${filterName}`))
-                        .forEach(attributeColumn => {
-                            let attributeArray = attributeColumn.split("_");
-                            if (attributeArray.length == 4) {
-                                filterProperty.filterAttributes.push({
-                                    "attributeName": attributeArray[3],
-                                    "attributeValue": row[attributeColumn]
-                                });
-                           };
-                        });
-                });
-                otherCategories = customFilterCategories;
-
-                collection.features.push(feature);
-            }
-        }) 
-    })
-    map.rootAdministrativeUnit = new AdministrativeUnit("root", 0, "Всі");
-    buildAdministrativeUnitsTree(map.rootAdministrativeUnit, collection.features);
 }
 
 function buildAdministrativeUnitsTree(rootAu, features) {
@@ -370,14 +220,13 @@ function buildAdministrativeUnitsTree(rootAu, features) {
 }
 
 function createMarker(feature) {
-    var marker = null;
+    let marker = null;
     marker = L.marker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
     //Generating features for GeoJSON   
     marker.feature = feature;
     feature.properties.searchby = [];
     //Create a new combined property 'searchby' for searching by multiple features
     searchByMapping.forEach(element => feature.properties.searchby.push(feature.properties[element]));
-
     return marker;
 }
 
@@ -387,24 +236,3 @@ function getMarkerColor(type) {
     else
         return 'blue';
 }
-
-// function buildRoutes() {
-//
-//     const router = new Router({
-//       mode: 'hash',
-//       root: '/'
-//     });
-//
-//     router
-//       .add(/Karta-nadannya-psihosotsіalinoii-pіdtrimki/, () => {
-//           console.log('router ', router);
-//         alert('welcome in about page');
-//       })
-//       .add(/products\/(.*)\/specification\/(.*)/, (id, specification) => {
-//         alert(`products: ${id} specification: ${specification}`);
-//       })
-//       .add('', () => {
-//         // general controller
-//         console.log('welcome in catch all controller');
-//       });
-// }

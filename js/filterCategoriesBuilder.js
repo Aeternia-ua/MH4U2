@@ -1,5 +1,5 @@
-function buildServiceCategory(categoriesRoot, codes)
-{
+function buildServiceCategory(categoriesRoot, codes) {
+    console.log("buildServiceCategory codes ", codes);
     let filteredCodes = codes.map(x => {
     return {
         codeValue: x.ac1,
@@ -16,7 +16,6 @@ function buildServiceCategory(categoriesRoot, codes)
     }
 
     let serviceCategory = [];
-
     distinctCodes.forEach(code => {
         serviceCategory.push({
             "filterProperty": "ac1",
@@ -29,31 +28,37 @@ function buildServiceCategory(categoriesRoot, codes)
     buildCheckboxFilters("Типпослуг", serviceCategory, categoriesParent);
 }
 
+function rowsToColumns(rows) {
+    return rows[0].map((_, colIndex) => rows.map(row => row[colIndex]));
+}
+
 function buildFacilityTypeCategory(categoriesRoot) {
+    let columns = [];
     let facilityTypesCategory = [];
     let columnName = "амбулаторна чи стаціонарна";
 
     let validationTable = dataTypesTemplate.find(sheetType => sheetType.type === "[conf]")
-        .data.find(table => table.name === validationTab);
+        .data.find(table => table.title === validationTab);
+    columns = rowsToColumns(validationTable['values']);
+    const facilityTypeCol = columns
+        .find(column => column[0] === columnName); // Get the "амбулаторна чи стаціонарна" column
 
-    validationTable.elements.forEach(row => {
-        let value = row[columnName].trim();
-        if (value !== "") {
+    facilityTypeCol.shift(); // Returns column values
+    facilityTypeCol.forEach(value => {
+        if (value && value !== "") { // TODO: Filter out undefined values when creating Sheet obj
             facilityTypesCategory.push({
                 "filterProperty": columnName,
-                "filterDisplayName": row[columnName],
-                "filterValueName": row[columnName]
+                "filterDisplayName": value,
+                "filterValueName": value
             });
         }
-    });
-
+    })
     let categoriesParent = buildCategorySection(categoriesRoot, "Тип закладу", "Типзакладу");
     buildCheckboxFilters("Типзакладу", facilityTypesCategory, categoriesParent);
 };
 
 function buildOtherCategories(categoriesRoot) {
     //"other-categories"
-
     Object.keys(otherCategories).forEach(category => {
         let categoryCanonicalName = category.replace(/ /g, "");
         let categoriesParent = buildCategorySection(categoriesRoot, category, categoryCanonicalName);

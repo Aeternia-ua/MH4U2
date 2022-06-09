@@ -1,12 +1,12 @@
 const dataURL = 'https://docs.google.com/spreadsheets/d/1owqbO4TlfVq3dw-Zyp-DxrooyCB0m1Hohstlha_o800/edit?usp=sharing';
 const acCodesURL = 'https://docs.google.com/spreadsheets/d/1jX20bMaNFLYijteEGjJBDNzpkVqTC_YP0mA2B1zpED4/edit?usp=sharing';
 
-function initData(tabletop) {
-    let sheets = (tabletop.sheets());
-    createDataTypes(dataTypesTemplate, sheets);
-}
+// function initData(tabletop) {
+//     let sheets = (tabletop.sheets());
+//     createDataTypes(dataTypesTemplate, sheets);
+// } // TODO: Rewrite for data fetched via Google Sheets API 4
 
-function getFacilitiesData(tabletop) {
+function getFacilitiesData(sheets) {
     return dataTypesTemplate.find(sheet => sheet.type === "[Так]");
 };
 
@@ -19,24 +19,17 @@ function createRegions(mappingSheets) {
 }
 
 function createDataTypes(dataTypesTemplate, sheets) {
-    //keys are the names of each tab of the spreadsheet
-    let keys = Object.keys(sheets);
-    dataTypesTemplate.forEach(element => {
-        let type = element.type;
-        let match = keys.filter((sheet) => sheet.includes(type));
-
-        let matchData = match .map(function(key) { 
-            return sheets[key];
-        });
-
-        for (let i = 0; i < matchData.length; i++) {
-            element.data.push(matchData[i]);
-        }
+    dataTypesTemplate.forEach(dataTemplate => {
+        let dataTemplateType = dataTemplate.type;
+        let matchedSheets = sheets.filter((sheet) => sheet.Title.includes(dataTemplateType));
+        // TODO: Add array of sheets to "data" of each data type object
+        let matchedSheetData = matchedSheets.forEach(sheet => {
+             dataTemplate.data.push(sheet);
+        })
     });
-    console.log(dataTypesTemplate);
+    return dataTypesTemplate;
 }
 
-///TODO: tab naming template
 let dataTypesTemplate  = [
     {
         ///Region tab that should be added to map
@@ -71,3 +64,282 @@ let dataTypesTemplate  = [
         data: []
     }
 ];
+
+function getEntries(keys, values) {
+    const entries = [];
+    values.forEach(value => {
+          const entry = [];
+          keys.map((key, i) => { entry[key] = value[i]; });
+          entries.push(entry);
+          });
+    return entries;
+}
+
+function createFacilitiesArray(facilitiesSheets) {
+
+    facilitiesSheets.data.forEach(region => {
+        let regionTabName = region.Title; // Get region name from the sheet tab name
+        let regionName = regionTabName.replace(/.*?\[.*?\]/, '');
+
+        const [, ...values] = region['values']; // Get all rows except header row
+        const nonEmptyValues = values.filter(e => e.length !== 0); // Remove empty rows
+        let headers = region['values'][0];
+        const entries = getEntries(headers, nonEmptyValues);
+        const displayEntries = entries
+            .filter(entry => (entry['Додати на мапу'] === 'TRUE' && entry['Latitude'] && entry['Longitude']));
+
+        displayEntries.forEach(row => {
+            let coords = [parseFloat(row['Longitude']), parseFloat(row['Latitude'])];
+            let feature = {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': coords
+                },
+                'properties': {
+                    'officialName': row["Офіційна назва"],
+                    'recorddate': row["Інформація актуальна станом на:"],
+                    'address': row["Адреса"],
+                    'district': row["Район"],
+                    'region': regionName,
+                    'phonenumber': row["контактний номер"],
+                    'email': row["електронна пошта веб сайт"],
+                    'mh4uCooperation': row["Співпраця з MH4U"],
+                    'patienttype': [],
+                    'mentalhealthworkers': row["фахівці з психічного здоров'я"],
+                    'mentalHealthWorkersNum': [],
+                    'ac1': row["Activity code 1"],
+                    'ac2': row["Activity code 2"],
+                    'ac test': row["Subactivity code 1"],
+                    'facilitytype': row["амбулаторна чи стаціонарна"]
+                }
+            }
+
+            let customFilterCategories = {};
+            Object.keys(row)
+                .filter(el => el.includes("F_")).forEach(filterColumn => {
+                    let filterName = filterColumn.replace("F_", "");
+                    let arr = filterName.split("_");
+
+                    let categoryName = arr[0].trim();
+                    let filterValueName = arr[1].trim();
+
+                    if (!customFilterCategories.hasOwnProperty(categoryName)) {
+                        customFilterCategories[categoryName] = [];
+                    }
+
+                    let filterObject = {
+                        "filterProperty": filterColumn,
+                        "filterDisplayName": filterValueName,
+                        "filterValueName": filterValueName
+                    };
+
+                    customFilterCategories[categoryName].push(filterObject);
+
+                    let filterProperty = {
+                        "filterValue": row[filterColumn],
+                        "filterAttributes": []
+                    };
+
+                    feature["properties"][`${filterColumn}`] = filterProperty;
+                    Object.keys(row)
+                        .filter(el => el.includes(`A_${filterName}`))
+                        .forEach(attributeColumn => {
+                            let attributeArray = attributeColumn.split("_");
+                            if (attributeArray.length == 4) {
+                                filterProperty.filterAttributes.push({
+                                    "attributeName": attributeArray[3],
+                                    "attributeValue": row[attributeColumn]
+                                });
+                            };
+                        });
+                });
+            otherCategories = customFilterCategories;
+            collection.features.push(feature);
+        })
+    })
+    map.rootAdministrativeUnit = new AdministrativeUnit("root", 0, "Всі");
+    buildAdministrativeUnitsTree(map.rootAdministrativeUnit, collection.features);
+}
+
+
+
+
+
+// function createFacilitiesArray(array) {
+//     let regions = array.values.forEach(region => {
+//
+//         let regionTabName = region.name; // Get region name from the sheet tab name
+//         let regionName = regionTabName.replace(/.*?\[.*?\]/, '');
+//
+//         let rows = region.elements;
+//         rows.forEach(row => {
+//
+//             let lat = parseFloat(row.Latitude);
+//             let lon = parseFloat(row.Longitude);
+//             // If the showOnMap checkbox is set to true, and if feature has the lat and long property, add feature to the map
+//             let showOnMap = row["Додати на мапу"];
+//             if (lat && lon && showOnMap === "TRUE") {
+//                 let coords = [parseFloat(row.Longitude), parseFloat(row.Latitude)];
+//                 let feature = {
+//                     'type': 'Feature',
+//                     'geometry': {
+//                         'type': 'Point',
+//                         'coordinates': coords
+//                     },
+//                     'properties': {
+//                         'officialName': row["Офіційна назва"],
+//                         'recorddate': row["Інформація актуальна станом на:"],
+//                         'address': row["Адреса"],
+//                         'district': row["Район"],
+//                         'region': regionName,
+//                         'phonenumber': row["контактний номер"],
+//                         'email': row["електронна пошта веб сайт"],
+//                         'mh4uCooperation': row["Співпраця з MH4U"],
+//                         'patienttype': [],
+//                         'mentalhealthworkers': row["фахівці з психічного здоров'я"],
+//                         'mentalHealthWorkersNum': [],
+//                         'ac1': row["Activity code 1"],
+//                         'ac2': row["Activity code 2"],
+//                         'facilitytype': row["амбулаторна чи стаціонарна"]
+//                     }
+//                 }
+//
+//                 let customFilterCategories = {};
+//
+//                 Object.keys(row)
+//                     .filter(el => el.includes("F_")).forEach(filterColumn => {
+//                     let filterName = filterColumn.replace("F_", "");
+//                     let arr = filterName.split("_");
+//
+//                     let categoryName = arr[0].trim();
+//                     let filterValueName = arr[1].trim();
+//
+//                     if (!customFilterCategories.hasOwnProperty(categoryName)) {
+//                         customFilterCategories[categoryName] = [];
+//                     }
+//
+//                     let filterObject = {
+//                         "filterProperty": filterColumn,
+//                         "filterDisplayName": filterValueName,
+//                         "filterValueName": filterValueName
+//                     };
+//
+//                     customFilterCategories[categoryName].push(filterObject);
+//
+//                     let filterProperty = {
+//                         "filterValue": row[filterColumn],
+//                         "filterAttributes": []
+//                     };
+//
+//                     feature["properties"][`${filterColumn}`] = filterProperty;
+//                     Object.keys(row)
+//                         .filter(el => el.includes(`A_${filterName}`))
+//                         .forEach(attributeColumn => {
+//                             let attributeArray = attributeColumn.split("_");
+//                             if (attributeArray.length == 4) {
+//                                 filterProperty.filterAttributes.push({
+//                                     "attributeName": attributeArray[3],
+//                                     "attributeValue": row[attributeColumn]
+//                                 });
+//                            };
+//                         });
+//                 });
+//                 otherCategories = customFilterCategories;
+//
+//                 collection.features.push(feature);
+//             }
+//         })
+//     })
+//     map.rootAdministrativeUnit = new AdministrativeUnit("root", 0, "Всі");
+//     buildAdministrativeUnitsTree(map.rootAdministrativeUnit, collection.features);
+// }
+
+// function createFacilitiesArray(array) {
+//     let regions = array.data.forEach(region => {
+//
+//         let regionTabName = region.name; // Get region name from the sheet tab name
+//         let regionName = regionTabName.replace(/.*?\[.*?\]/, '');
+//
+//         let rows = region.elements;
+//         rows.forEach(row => {
+//
+//             let lat = parseFloat(row.Latitude);
+//             let lon = parseFloat(row.Longitude);
+//             // If the showOnMap checkbox is set to true, and if feature has the lat and long property, add feature to the map
+//             let showOnMap = row["Додати на мапу"];
+//             if (lat && lon && showOnMap === "TRUE") {
+//                 let coords = [parseFloat(row.Longitude), parseFloat(row.Latitude)];
+//                 let feature = {
+//                     'type': 'Feature',
+//                     'geometry': {
+//                         'type': 'Point',
+//                         'coordinates': coords
+//                     },
+//                     'properties': {
+//                         'officialName': row["Офіційна назва"],
+//                         'recorddate': row["Інформація актуальна станом на:"],
+//                         'address': row["Адреса"],
+//                         'district': row["Район"],
+//                         'region': regionName,
+//                         'phonenumber': row["контактний номер"],
+//                         'email': row["електронна пошта веб сайт"],
+//                         'mh4uCooperation': row["Співпраця з MH4U"],
+//                         'patienttype': [],
+//                         'mentalhealthworkers': row["фахівці з психічного здоров'я"],
+//                         'mentalHealthWorkersNum': [],
+//                         'ac1': row["Activity code 1"],
+//                         'ac2': row["Activity code 2"],
+//                         'facilitytype': row["амбулаторна чи стаціонарна"]
+//                     }
+//                 }
+//
+//                 let customFilterCategories = {};
+//
+//                 Object.keys(row)
+//                     .filter(el => el.includes("F_")).forEach(filterColumn => {
+//                     let filterName = filterColumn.replace("F_", "");
+//                     let arr = filterName.split("_");
+//
+//                     let categoryName = arr[0].trim();
+//                     let filterValueName = arr[1].trim();
+//
+//                     if (!customFilterCategories.hasOwnProperty(categoryName)) {
+//                         customFilterCategories[categoryName] = [];
+//                     }
+//
+//                     let filterObject = {
+//                         "filterProperty": filterColumn,
+//                         "filterDisplayName": filterValueName,
+//                         "filterValueName": filterValueName
+//                     };
+//
+//                     customFilterCategories[categoryName].push(filterObject);
+//
+//                     let filterProperty = {
+//                         "filterValue": row[filterColumn],
+//                         "filterAttributes": []
+//                     };
+//
+//                     feature["properties"][`${filterColumn}`] = filterProperty;
+//                     Object.keys(row)
+//                         .filter(el => el.includes(`A_${filterName}`))
+//                         .forEach(attributeColumn => {
+//                             let attributeArray = attributeColumn.split("_");
+//                             if (attributeArray.length == 4) {
+//                                 filterProperty.filterAttributes.push({
+//                                     "attributeName": attributeArray[3],
+//                                     "attributeValue": row[attributeColumn]
+//                                 });
+//                            };
+//                         });
+//                 });
+//                 otherCategories = customFilterCategories;
+//
+//                 collection.features.push(feature);
+//             }
+//         })
+//     })
+//     map.rootAdministrativeUnit = new AdministrativeUnit("root", 0, "Всі");
+//     buildAdministrativeUnitsTree(map.rootAdministrativeUnit, collection.features);
+// }
