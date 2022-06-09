@@ -89,6 +89,45 @@ const codesProperties = [
 
 ];
 
+// const codesProperties = [
+// 	{
+// 		name: "ac1",
+// 		columnName: "Activity code",
+//         category: "1"
+// 	},
+// 	{
+// 		name: "activitycategory",
+// 		columnName: "Activity category",
+//         category: "1"
+// 	},
+// 	{
+// 		name: "activitycodename",
+// 		columnName: "Activity code name",
+//         category: "1"
+// 	},
+// 	{
+// 		name: "subactivitycode",
+// 		columnName: "Subactivity code",
+//         category: "1"
+// 	},
+// 	{
+// 		name: "subactivitycodename",
+// 		columnName: "Subactivity code name",
+//         category: "1"
+// 	},
+//     {
+//         name: "ac2",
+//         columnName: "Activity code",
+//         category: "2"
+//     },
+//     {
+//         name: "subactivitycode2",
+//         columnName: "Subactivity code",
+//         category: "2"
+//     }
+//
+// ];
+
 const buttonsJson = [
     {
         buttonId : "clearТиппослугFiltersBtn",

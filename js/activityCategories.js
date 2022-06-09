@@ -41,12 +41,17 @@ function mergeCodes(arr, codeArr) {
                 codeElement[codeProperty.name] = code[codeProperty.columnName];
             });
             codes.push(codeElement);
-            // TODO: Check
+            console.log("code ", code);
+            // TODO: Fetch ac2 and subac2 using code['Category']
             arr.features.forEach(feature => {
-                feature.properties.ac1 === code['Activity code']
+                feature.properties.ac1 === code['Activity code'];
+                feature.properties.subac1 === code['Subactivity code'];
+                console.log("feature.properties.ac2 ", feature.properties.ac2)
             });
             arr.features
-            .filter(feature => feature.properties.ac1 === code['Activity code'])
+            .filter(feature => feature.properties.ac1 === code['Activity code']
+                && feature.properties.subac1 === code['Subactivity code']
+            ) // Get all features with the specific ac1 and subac1
             .forEach(feature => {
                 codesProperties.forEach(codeProperty => {
                     feature.properties[codeProperty.name] = code[codeProperty.columnName];

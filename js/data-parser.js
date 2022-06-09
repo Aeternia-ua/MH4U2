@@ -110,7 +110,8 @@ function createFacilitiesArray(facilitiesSheets) {
                     'mentalHealthWorkersNum': [],
                     'ac1': row["Activity code 1"],
                     'ac2': row["Activity code 2"],
-                    'ac test': row["Subactivity code 1"],
+                    'subac1': row["Subactivity code 1"],
+                    'subac2': row["Subactivity code 2"],
                     'facilitytype': row["амбулаторна чи стаціонарна"]
                 }
             }
